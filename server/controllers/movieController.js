@@ -1,6 +1,6 @@
 const movieModel = require('../models/movieModel.js');
-const apiHelpers = require('../helpers/apiHelpers.js');
 const axios = require('axios');
+const db = require('../../db/mongodb/index.js')
 const { API_KEY } = require("../../config.js");
 
 
@@ -12,6 +12,11 @@ module.exports = {
     // get the search genre     
     // https://www.themoviedb.org/account/signup
     // get your API KEY
+    //console.log(req.query.genre);
+
+    axios.get(
+      `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.asc&include_adult=false&include_video=false&page=1&with_genres=99`
+    );
 
     // use this endpoint to search for movies by genres, you will need an API key
 
@@ -21,10 +26,11 @@ module.exports = {
   },
   getGenres: (req, res) => {
     // make an axios request to get the list of official genres
-    console.log("you got here");
+    //console.log("you got here");
     axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`)
     .then((response) => {
       console.log(response.data.genres);
+      db. 
       res.send(response.data.genres);
     })
     .catch((err)=> {

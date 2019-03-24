@@ -5,7 +5,8 @@ class Search extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      genres: []
+      genres: [],
+      selected: "Action"
     };
   }
 
@@ -15,14 +16,32 @@ class Search extends React.Component {
 
   getGenres() {
     //make an axios request in this component to get the list of genres from your endpoint GET GENRES
-     return axios.get('/movies/genres')
+     return axios.get('/movies/genres') //why am I returning this here?
      .then((data) => {
        this.setState({genres: data})
-       console.log(this.state);
+       //console.log(this.state);
       })
      .catch((err)=>(console.log(err)));
      
   }
+
+  handleGenreChange(e) {
+    // console.log(e.target)
+    this.setState({selected: e.target.value})
+    //console.log(this.state.selected)
+  }
+
+  getBadMoviesByGenre() {
+    axios.get(`/movies/search?genre=${this.state.selected}`)
+    .then((data) => {
+
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
+  }
+
 
   render() {
     if (this.state.genres.data !== undefined) {
@@ -35,15 +54,15 @@ class Search extends React.Component {
           {/* Make the select options dynamic from genres !!! */}
           {/* How can you tell which option has been selected from here? */}
 
-          <select>
-          {this.state.genres.data.map(({ id, name }) => { return (<option key={id} value={name}>{name}</option> )})}
+          <select value={this.state.selected} onChange={(e)=>{this.handleGenreChange(e)}}>
+          {this.state.genres.data.map(({ id, name }) => { return (<option key={id} id={id} value={name}>{name}</option> )})}
             {/* <option value="theway">The Way</option>
           <option value="thisway">This Way</option>
           <option value="thatway">That Way</option> */}
           </select>
           <br /><br />
 
-          <button>Search</button>
+          <button onClick={(e)=>{this.getBadMoviesByGenre(e)}}>Search</button>
 
         </div>
       );
